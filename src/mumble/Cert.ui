@@ -143,6 +143,32 @@ It is &lt;b&gt;strongly&lt;/b&gt; recommended that you &lt;a href=&quot;http://m
       </property>
      </widget>
     </item>
+    <item>
+     <widget class="QRadioButton" name="qrbExportMobile">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="toolTip">
+       <string>Export current certificate to mobile device</string>
+      </property>
+      <property name="whatsThis">
+       <string>This will export the current certificate to a QR code that can be scanned using a mobile device.</string>
+      </property>
+      <property name="text">
+       <string>Export current certificate to mobile device</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>skin:Phone-htc-nexus-one.svg</normaloff>skin:Phone-htc-nexus-one.svg</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>32</width>
+        <height>32</height>
+       </size>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="CompletablePage" name="qwpImport">
@@ -469,6 +495,53 @@ Are you sure you wish to replace your certificate?
       </property>
       <property name="wordWrap">
        <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWizardPage" name="qwpExportMobile">
+   <property name="title">
+    <string>Export to Mobile Device</string>
+   </property>
+   <property name="subTitle">
+    <string>Transfer your current certificate to Mumble on your mobile device</string>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout_3">
+    <item>
+     <widget class="QLabel" name="qlMobileExport">
+      <property name="text">
+       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;To transfer your certificate to your mobile device, simply scan the QR code below using the Mumble app for your device.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="CertView" name="cvMobileExport">
+      <property name="toolTip">
+       <string>Current certificate</string>
+      </property>
+      <property name="whatsThis">
+       <string>This is the certificate Mumble currently uses. It will be exported.</string>
+      </property>
+      <property name="title">
+       <string>Certificate Details</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="qlQrCode">
+      <property name="text">
+       <string>QR</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
       </property>
      </widget>
     </item>

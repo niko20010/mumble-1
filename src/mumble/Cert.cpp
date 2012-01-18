@@ -143,6 +143,8 @@ int CertWizard::nextId() const {
 					return 2;
 				else if (qrbExport->isChecked())
 					return 3;
+				else if (qrbExportMobile->isChecked())
+					return 6;
 			}
 		case 2: // Import
 			if (validateCert(kpCurrent))
@@ -160,6 +162,8 @@ int CertWizard::nextId() const {
 				return 5;
 			else
 				return -1;
+		case 6: // Export to Mobile Device
+			return -1;
 		case 1: // New
 			if (validateCert(kpCurrent))
 				return 4;
@@ -176,14 +180,19 @@ void CertWizard::initializePage(int id) {
 		if (validateCert(kpCurrent)) {
 			qrbQuick->setEnabled(false);
 			qrbExport->setEnabled(true);
+			qrbExportMobile->setEnabled(true);
 			cvWelcome->setCert(kpCurrent.first);
 			cvWelcome->setVisible(true);
 		} else {
 			qrbQuick->setEnabled(true);
 			qrbExport->setEnabled(false);
+			qrbExportMobile->setEnabled(false);
 			cvWelcome->setVisible(false);
 			qrbQuick->setChecked(true);
 		}
+#ifndef USE_QRENCODE
+		qrbExportMobile->setEnabled(false);
+#endif
 	}
 	if (id == 3) {
 		cvExport->setCert(kpNew.first);
@@ -194,6 +203,36 @@ void CertWizard::initializePage(int id) {
 	}
 	if (id == 2) {
 		on_qleImportFile_textChanged(qleImportFile->text());
+	}
+	if (id == 6) {
+		cvMobileExport->setCert(kpNew.first);
+#ifdef USE_QRENCODE
+		QByteArray qbaChain;
+		foreach(const QSslCertificate &cert, kpNew.first) {
+			qbaChain.append(cert.toDer());
+		}
+		QRinput *qrin = QRinput_new();
+		QRinput_setErrorCorrectionLevel(qrin, QR_ECLEVEL_H);
+		QRinput_append(qrin, QR_MODE_8, qbaChain.count(), reinterpret_cast<unsigned char *>(qbaChain.data()));
+		QRcode *qr = QRcode_encodeInput(qrin);
+		QPixmap pm(qr->width, qr->width);
+		QPainter p;
+		p.scale(4, 4);
+		p.begin(&pm);
+		p.fillRect(0, 0, qr->width, qr->width, Qt::white);
+		p.setBrush(QBrush(Qt::black));
+		for (int i = 0; i < qr->width; i++) {
+			for (int j = 0; j < qr->width; j++) {
+				unsigned char dot = qr->data[(i*qr->width)+j];
+				if (dot & 0x1)
+					p.drawPoint(i, j);
+			}
+		}
+		p.end();
+		qlQrCode->setPixmap(pm.scaledToWidth(qr->width*3));
+		QRinput_free(qrin);
+		QRcode_free(qr);
+#endif
 	}
 
 	QWizard::initializePage(id);

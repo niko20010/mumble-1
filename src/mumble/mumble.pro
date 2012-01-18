@@ -111,6 +111,7 @@ win32 {
 unix {
   HAVE_PULSEAUDIO=$$system(pkg-config --modversion --silence-errors libpulse)
   HAVE_PORTAUDIO=$$system(pkg-config --modversion --silence-errors portaudio-2.0)
+  HAVE_QRENCODE=$$system(pkg-config --modversion --silence-errors libqrencode)
 
   !isEmpty(HAVE_PORTAUDIO):!CONFIG(no-portaudio) {
     CONFIG *= portaudio
@@ -119,6 +120,10 @@ unix {
   !isEmpty(HAVE_PULSEAUDIO):!CONFIG(no-pulseaudio) {
     CONFIG -= portaudio
     CONFIG *= pulseaudio
+  }
+
+  !isEmpty(HAVE_QRENCODE):!CONFIG(no-qrencode) {
+    CONFIG *= qrencode
   }
 
   !CONFIG(no-bundled-speex) {
@@ -280,6 +285,13 @@ g15 {
 	macx {
 		SOURCES *= G15LCDEngine_helper.cpp
 		HEADERS *= G15LCDEngine_helper.h ../../g15helper/g15helper.h
+	}
+}
+
+qrencode {
+	DEFINES *= USE_QRENCODE
+	unix {
+		PKGCONFIG *= libqrencode
 	}
 }
 

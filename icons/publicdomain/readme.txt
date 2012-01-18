@@ -1,4 +1,5 @@
 Information_icon.svg came from http://en.wikipedia.org/wiki/File:Information_icon.svg.
+Phone-htc-nexus-one.svg came from http://commons.wikimedia.org/wiki/File:Phone-htc-nexus-one.svg.
 
 Licensing
 The copyright holder of this work, hereby release it into the public domain. This applies worldwide.

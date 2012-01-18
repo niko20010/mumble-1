@@ -123,6 +123,10 @@ typedef WId HWND;
 #endif
 #endif
 
+#ifdef USE_QRENCODE
+#include <qrencode.h>
+#endif
+
 #ifdef __OBJC__
  #define nil 0
 #endif
