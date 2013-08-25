@@ -579,7 +579,7 @@ int main(int argc, char **argv) {
 	return res;
 }
 
-#ifdef QT_NO_DEBUG
+#if defined(Q_OS_WIN) && defined(QT_NO_DEBUG)
 extern void qWinMain(HINSTANCE, HINSTANCE, LPSTR, int, int &, QVector<char *> &);
 
 extern "C" _declspec(dllexport) int MumbleMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR cmdArg, int cmdShow) {
