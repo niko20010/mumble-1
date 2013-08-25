@@ -587,7 +587,9 @@ extern "C" _declspec(dllexport) int MumbleMain(HINSTANCE instance, HINSTANCE pre
 
 	QByteArray cmdParam = QString::fromWCharArray(GetCommandLine()).toLocal8Bit();
 	int argc = 0;
-	QVector<char *> argv(8);
+
+	// qWinMain takes argv as a reference.
+	QVector<char *> argv;
 	qWinMain(instance, prevInstance, cmdParam.data(), cmdShow, argc, argv);
 
 	int result = main(argc, argv.data());
