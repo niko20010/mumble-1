@@ -73,6 +73,7 @@
 
 #ifdef USE_COCOA
 #include "ConfigDialog_macx.h"
+#include "MacUnifiedToolbar.h"
 #endif
 
 MessageBoxEvent::MessageBoxEvent(QString m) : QEvent(static_cast<QEvent::Type>(MB_QEVENT)) {
@@ -161,6 +162,9 @@ MainWindow::MainWindow(QWidget *p) : QMainWindow(p) {
 
 	createActions();
 	setupUi(this);
+#if defined(Q_OS_MAC) && QT_VERSION > QT_VERSION_CHECK(5, 0, 0)
+	setMacToolbarForMainWindow(this, qtIconToolbar);
+#endif
 	setupGui();
 
 	connect(qmUser, SIGNAL(aboutToShow()), this, SLOT(qmUser_aboutToShow()));

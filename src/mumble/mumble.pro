@@ -59,7 +59,9 @@ isEqual(QT_MAJOR_VERSION, 5) {
   QT *= widgets
   # Allow native widget access.
   win32:QT *= gui-private
-  macx:QT *= gui-private
+  macx {
+    QT *= gui-private macextras
+  }
 }
 
 HEADERS		*= BanEditor.h ACLEditor.h ConfigWidget.h Log.h AudioConfigDialog.h AudioStats.h AudioInput.h AudioOutput.h AudioOutputSample.h AudioOutputSpeech.h AudioOutputUser.h CELTCodec.h CustomElements.h MainWindow.h ServerHandler.h About.h ConnectDialog.h GlobalShortcut.h TextToSpeech.h Settings.h Database.h VersionCheck.h Global.h UserModel.h Audio.h ConfigDialog.h Plugins.h PTTButtonWidget.h LookConfig.h Overlay.h OverlayText.h SharedMemory.h AudioWizard.h ViewCert.h TextMessage.h NetworkConfig.h LCD.h Usage.h Cert.h ClientUser.h UserEdit.h UserListModel.h Tokens.h UserView.h RichTextEditor.h UserInformation.h SocketRPC.h VoiceRecorder.h VoiceRecorderDialog.h WebFetch.h ../SignalCurry.h
@@ -235,8 +237,8 @@ unix {
 
     LIBS += -framework Security -framework SecurityInterface -framework ApplicationServices
 
-    HEADERS *= GlobalShortcut_macx.h ConfigDialogDelegate.h
-    SOURCES *= TextToSpeech_macx.cpp SharedMemory_unix.cpp
+    HEADERS *= GlobalShortcut_macx.h ConfigDialogDelegate.h MacUnifiedToolbar.h MacUnifiedToolbarStyle.h MacUnifiedToolbarDelegate.h MacUnifiedToolbarResizeObserver.h
+    SOURCES *= TextToSpeech_macx.cpp SharedMemory_unix.cpp MacUnifiedToolbar.mm MacUnifiedToolbarStyle.cpp MacUnifiedToolbarDelegate.mm MacUnifiedToolbarResizeObserver.mm
     OBJECTIVE_SOURCES *= GlobalShortcut_macx.mm os_macx.mm Log_macx.mm
 
     !CONFIG(no-cocoa) {
