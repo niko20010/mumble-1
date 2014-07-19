@@ -455,8 +455,18 @@ void PulseAudioSystem::read_callback(pa_stream *s, size_t bytes, void *userdata)
 	PulseAudioSystem *pas = reinterpret_cast<PulseAudioSystem *>(userdata);
 
 	size_t length = bytes;
-	const void *data;
+	const void *data = NULL;
 	pa_stream_peek(s, &data, &length);
+	if (data == NULL && length > 0) {
+		qWarning("PulseAudio: pa_stream_peek reports no data at current read index.");
+		return;
+	} else if (data == NULL && length == 0) {
+		qWarning("PulseAudio: pa_stream_peek reports empty memblockq.");
+		return;
+	} else if (data == NULL || length == 0) {
+		qWarning("PulseAudio: invalid pa_stream_peek state encountered.");
+		return;
+	}
 
 	AudioInputPtr ai = g.ai;
 	PulseAudioInput *pai = dynamic_cast<PulseAudioInput *>(ai.get());
