@@ -69,7 +69,7 @@ Database::Database() {
 
 	datapaths << g.qdBasePath.absolutePath();
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-	datapaths << QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation);
+	datapaths << QStandardPaths::writableLocation(QStandardPaths::DataLocation);
 #else
 	datapaths << QDesktopServices::storageLocation(QDesktopServices::DataLocation);
 #endif
@@ -80,6 +80,9 @@ Database::Database() {
 	datapaths << QDir::currentPath();
 	datapaths << qApp->applicationDirPath();
 	datapaths << qs.value(QLatin1String("InstPath")).toString();
+
+	qWarning("%s", qPrintable(datapaths.join(QLatin1String(" "))));
+
 	bool found = false;
 
 	for (i = 0; (i < datapaths.size()) && ! found; i++) {
