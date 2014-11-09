@@ -28,6 +28,10 @@ CONFIG *= ordered debug_and_release
 	SUBDIRS *= opus-build
   }
 
+  win32 {
+    SUBDIRS *= 3rdparty/minhook-build
+  }
+
   SUBDIRS *= src/mumble
 
   win32:CONFIG(static) {
@@ -40,7 +44,6 @@ CONFIG *= ordered debug_and_release
 
   win32 {
     SUBDIRS *= 3rdparty/fx11-build
-    SUBDIRS *= 3rdparty/minhook-build
     SUBDIRS *= overlay
     !CONFIG(no-g15) {
       SUBDIRS *= g15helper
