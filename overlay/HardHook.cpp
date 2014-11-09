@@ -39,20 +39,20 @@ static LONG minhook_init_once = 0;
 // library is initialized. If MinHook is already
 // initialized, calling this function is a no-op.
 static void EnsureMinHookInitialized() {
-  // Ensure MH_Initialize is only called once.
-  if (InterlockedCompareExchange(&minhook_init_once, 1, 0) == 0) {
-    MH_Initialize();
-  }
+	// Ensure MH_Initialize is only called once.
+	if (InterlockedCompareExchange(&minhook_init_once, 1, 0) == 0) {
+		MH_Initialize();
+	}
 }
 
 /**
  * @brief Constructs a new hook without actually injecting.
  */
 HardHook::HardHook()
-  : m_func(NULL)
-  , m_replacement(NULL)
-  , call(NULL) {
-    EnsureMinHookInitialized();
+	: m_func(NULL)
+	, m_replacement(NULL)
+	, call(NULL) {
+	EnsureMinHookInitialized();
 }
 
 /**
@@ -62,12 +62,12 @@ HardHook::HardHook()
  * @param replacement Function to inject into func.
  */
 HardHook::HardHook(voidFunc func, voidFunc replacement) {
-    EnsureMinHookInitialized();
+	EnsureMinHookInitialized();
 
-    m_func = func;
-    m_replacement = replacement;
+	m_func = func;
+	m_replacement = replacement;
 
-    setup(func, replacement);
+	setup(func, replacement);
 }
 
 /**
@@ -81,15 +81,15 @@ HardHook::HardHook(voidFunc func, voidFunc replacement) {
  * @param replacement Pointer to code to redirect to.
  */
 void HardHook::setup(voidFunc func, voidFunc replacement) {
-  MH_STATUS status = MH_CreateHook((LPVOID) func, (LPVOID)replacement, (LPVOID *)&call);
-  if (status != MH_OK) {
-    fods("HardHook: setup failed, MH_CreateHook returned %li", static_cast<long>(status));
-  }
+	MH_STATUS status = MH_CreateHook((LPVOID) func, (LPVOID)replacement, (LPVOID *)&call);
+	if (status != MH_OK) {
+		fods("HardHook: setup failed, MH_CreateHook returned %li", static_cast<long>(status));
+	}
 
-  status = MH_EnableHook((LPVOID)m_func);
-  if (status != MH_OK) {
-    fods("HardHook: setup failed, MH_EnableHook returned %ld", static_cast<long>(status));
-  }
+	status = MH_EnableHook((LPVOID)m_func);
+	if (status != MH_OK) {
+		fods("HardHook: setup failed, MH_EnableHook returned %ld", static_cast<long>(status));
+	}
 }
 
 void HardHook::setupInterface(IUnknown *unkn, LONG funcoffset, voidFunc replacement) {
@@ -100,17 +100,17 @@ void HardHook::setupInterface(IUnknown *unkn, LONG funcoffset, voidFunc replacem
 }
 
 void HardHook::reset() {
-  m_func = NULL;
-  m_replacement = NULL;
-  call = NULL;
+	m_func = NULL;
+	m_replacement = NULL;
+	call = NULL;
 }
 
 void HardHook::inject(bool force) {
-  // XXX: MinHook seems to guarantee presence of a trampoline, so this can be a no-op.
-  //      Check the source to make sure.
+	// XXX: MinHook seems to guarantee presence of a trampoline, so this can be a no-op.
+	//      Check the source to make sure.
 }
 
 void HardHook::restore(bool force) {
-  // XXX: MinHook seems to guarantee presence of a trampoline, so this can be a no-op.
-  //      Check the source to make sure.
+	// XXX: MinHook seems to guarantee presence of a trampoline, so this can be a no-op.
+	//      Check the source to make sure.
 }
