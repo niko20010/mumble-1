@@ -47,9 +47,9 @@
 typedef void *(*voidFunc)();
 
 struct HardHook {
-  voidFunc  m_func;
-  voidFunc  m_replacement;
-  voidFunc  call;
+	voidFunc  m_func;
+	voidFunc  m_replacement;
+	voidFunc  call;
 
 	HardHook();
 	HardHook(voidFunc func, voidFunc replacement);
