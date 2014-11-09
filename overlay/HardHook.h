@@ -58,8 +58,6 @@ struct HardHook {
 	void reset();
 	void inject(bool force = false);
 	void restore(bool force = false);
-	void print();
-	void check();
 };
 
 #endif

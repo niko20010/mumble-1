@@ -114,17 +114,3 @@ void HardHook::restore(bool force) {
   // XXX: MinHook seems to guarantee presence of a trampoline, so this can be a no-op.
   //      Check the source to make sure.
 }
-
-void HardHook::print() {
-	fods("HardHook: print called");
-}
-
-/**
- * @brief Checks whether injected code is in good shape and injects if not yet injected.
- *
- * If injected code is not found injection is attempted unless 3rd party overwrote
- * original code at injection location.
- */
-void HardHook::check() {
-	fods("HardHook: check called");
-}
