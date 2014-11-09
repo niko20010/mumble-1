@@ -28,13 +28,18 @@ INCLUDEPATH *= "$$FX11DIR/inc"
 LIBS *= -ldxguid -luuid -lole32 -luser32 -ladvapi32
 LIBS *= -ld3d9 -ld3d10 -ld3d11 -ld3dcompiler -ld3dx9 -ld3dx10 -ld3dx11 -ldxgi
 
+INCLUDEPATH *= ../3rdparty/minhook-src/include
+LIBS *= -lminhook
+
 CONFIG(release, debug|release) {
   DESTDIR = ../release
+  QMAKE_LIBDIR += ../release
   LIBS *= -l$$FX11DIR_BUILD/release/effects11
 }
 
 CONFIG(debug, debug|release) {
   DESTDIR = ../debug
+  QMAKE_LIBDIR += ../debug
   DEFINES *= DEBUG
   LIBS *= -l$$FX11DIR_BUILD/debug/effects11
 }

@@ -26,7 +26,8 @@ TARGET = minhook
 INCLUDEPATH = ../minhook-src/src ../minhook-src/src/HDE ../minhook-src/include
 DEFINES += WIN32 _WINDOWS _USRDLL MINHOOK_EXPORTS
 
-INCLUDEPATH += ../speexbuild/win32
+QMAKE_CFLAGS_RELEASE -= -MD
+QMAKE_CFLAGS_DEBUG -= -MDd
 
 SOURCES *= \
   src/HDE/hde64.c \
