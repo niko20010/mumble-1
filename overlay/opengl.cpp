@@ -434,7 +434,7 @@ void checkOpenGLHook() {
 				ods("OpenGL: Failed to find GDI32");
 			}
 		} else {
-			hhwglSwapBuffers.check();
+			ods("OpenGL: unable to check healthiness of our hook in MinHook-based HardHook");
 		}
 	}
 
