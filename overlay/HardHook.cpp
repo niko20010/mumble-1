@@ -35,6 +35,32 @@
 
 static LONG minhook_init_once = 0;
 
+static const char *minhook_status_string(MH_STATUS status) {
+
+#define MHS(x) \
+	case x: \
+		return #x;
+
+	switch (status) {
+		MHS(MH_UNKNOWN)
+		MHS(MH_OK)
+		MHS(MH_ERROR_ALREADY_INITIALIZED)
+		MHS(MH_ERROR_NOT_INITIALIZED)
+		MHS(MH_ERROR_ALREADY_CREATED)
+		MHS(MH_ERROR_NOT_CREATED)
+		MHS(MH_ERROR_ENABLED)
+		MHS(MH_ERROR_DISABLED)
+		MHS(MH_ERROR_NOT_EXECUTABLE)
+		MHS(MH_ERROR_UNSUPPORTED_FUNCTION)
+		MHS(MH_ERROR_MEMORY_ALLOC)
+		MHS(MH_ERROR_MEMORY_PROTECT)
+	}
+
+#undef MHS
+
+	return "(unknown)";
+}
+
 // EnsureMinHookInitialized ensures that the MinHook
 // library is initialized. If MinHook is already
 // initialized, calling this function is a no-op.
@@ -83,12 +109,12 @@ HardHook::HardHook(voidFunc func, voidFunc replacement) {
 void HardHook::setup(voidFunc func, voidFunc replacement) {
 	MH_STATUS status = MH_CreateHook((LPVOID) func, (LPVOID)replacement, (LPVOID *)&call);
 	if (status != MH_OK) {
-		fods("HardHook: setup failed, MH_CreateHook returned %li", static_cast<long>(status));
+		fods("HardHook: setup failed, MH_CreateHook returned %s", minhook_status_string(status));
 	}
 
 	status = MH_EnableHook((LPVOID)m_func);
 	if (status != MH_OK) {
-		fods("HardHook: setup failed, MH_EnableHook returned %ld", static_cast<long>(status));
+		fods("HardHook: setup failed, MH_EnableHook returned %s", minhook_status_string(status));
 	}
 }
 
@@ -105,12 +131,50 @@ void HardHook::reset() {
 	call = NULL;
 }
 
+/**
+ * @brief Injects redirection code into the target function.
+ *
+ * Replaces the first 6 Bytes of the function indicated by baseptr
+ * with the replacement code previously generated (usually a jump
+ * to mumble code). If a trampoline is available this injection is not needed
+ * as control flow was already permanently redirected by HardHook::setup .
+ *
+ * @param force Perform injection even when trampoline is available.
+ */
 void HardHook::inject(bool force) {
-	// XXX: MinHook seems to guarantee presence of a trampoline, so this can be a no-op.
-	//      Check the source to make sure.
+	if (!force) {
+		// MinHook guarantees the presence of a trampoline, so
+		// inject() and restore() are no-ops unless force is
+		// set to true.
+		return;
+	}
+
+	MH_STATUS status = MH_EnableHook((LPVOID)m_func);
+	if (status != MH_OK) {
+		fods("HardHook: inject() failed: MH_EnableHook returned %s", minhook_status_string(status));
+	}
 }
 
+/**
+ * @brief Restores the original code in a target function.
+ *
+ * Restores the first 6 Bytes of the function indicated by baseptr
+ * from previously stored original code in orig. If a trampoline is available this
+ * restoration is not needed as trampoline will correctly restore control
+ * flow.
+ *
+ * @param force If true injection will be reverted even when trampoline is available.
+ */
 void HardHook::restore(bool force) {
-	// XXX: MinHook seems to guarantee presence of a trampoline, so this can be a no-op.
-	//      Check the source to make sure.
+	if (!force) {
+		// MinHook guarantees the presence of a trampoline, so
+		// inject() and restore() are no-ops unless force is
+		// set to true.
+		return;
+	}
+
+	MH_STATUS status = MH_DisableHook((LPVOID)m_func);
+	if (status != MH_OK) {
+		fods("HardHook: restore() failed: MH_DisableHook returned %s", minhook_status_string(status));
+	}
 }
