@@ -1144,7 +1144,11 @@ void Server::newClient() {
 
 		u->setToS();
 
+#ifdef USE_TLSV12
+		sock->setProtocol(QSsl::TlsV1_2);
+#else
 		sock->setProtocol(QSsl::TlsV1);
+#endif
 		sock->startServerEncryption();
 	}
 }

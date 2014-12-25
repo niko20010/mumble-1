@@ -292,8 +292,12 @@ void ServerHandler::run() {
 	}
 	bUdp = false;
 
-
+#ifdef USE_TLSV12
+	qtsSock->setProtocol(QSsl::TlsV1_2);
+#else
 	qtsSock->setProtocol(QSsl::TlsV1);
+#endif
+
 	qtsSock->connectToHostEncrypted(qsHostName, usPort);
 
 	tTimestamp.restart();
