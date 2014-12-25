@@ -29,6 +29,10 @@ CONFIG(packaged) {
 	}
 }
 
+CONFIG(tlsv1+) {
+	DEFINES *= USE_TLSV1_OR_GREATER
+}
+
 win32 {
 	INCLUDEPATH *= "$$PROTOBUF_PATH/vsprojects/include" "$$PROTOBUF_PATH/src"
 	CONFIG(debug, debug|release) {
