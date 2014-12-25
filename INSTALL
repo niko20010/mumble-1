@@ -154,3 +154,12 @@ CONFIG+=no-overlay (Mumble, Linux)
 CONFIG+=no-xinput2 (Mumble, Linux)
  Don't build support for XI2.
 
+CONFIG+=tlsv1+ (Mumble, Murmur)
+ Enable use of TLS (Transport Layer Security) versions greater
+ than or equal to 1.0, such as TLS 1.1, TLS 1.2 and greater.
+ This still allows Mumble to connect to servers using TLS 1.0,
+ and Murmur to accept clients that only use TLS 1.0. (This config
+ option requires a version of Qt 4 that includes a custom patch
+ to add a QSsl::TlsV1OrGreater flag to QSsl::SslProtocols, such as
+ the mumble-developers-qt tree:
+ https://github.com/mumble-voip/mumble-developers-qt)
