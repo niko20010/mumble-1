@@ -37,6 +37,7 @@
 #include <d3d11.h>
 #include <d3dx11.h>
 #include <time.h>
+#include <delayimp.h>
 
 D3D11Data *d3d11 = NULL;
 
@@ -663,6 +664,53 @@ void hookD3D11(HMODULE hD3D11, bool preonly) {
 	}
 }
 
+static bool HasD3DCompilerDLL() {
+	// Check that D3DCompiler_43.dll is available on the system.
+	// D3DCompiler_43.dll is imported by fx11, which is only used
+	// in our D3D11, so checking this here should be safe.
+	//
+	// We only check this for our Windows x86 builds,
+	// and not x64.
+	//
+	// Our x86 builds use the D3D9 (June 2010) SDK, and
+	// requires that the D3D9 redist package is installed
+	// for the DLL to be available. Since that might not
+	// be the case, we delay-load the DLL, and try to
+	// actually load it here.
+	//
+	// Our x64 builds expect to use the Windows provided
+	// DirectX DLLS when they're available on the system.
+	//
+	// In practice, this means that we require
+	// that users install the D3D9 redist package in
+	// order to have D3D11 support in the overlay
+	// in our x86 builds.
+	//
+	// It's not ideal, and this new mechanism makes it
+	// almost undiscoverable that the DX redist is what
+	// is needed to make D3D11 actually work. But let us
+	// try it out for now...
+#ifndef _WIN64
+	{
+		HRESULT hr = E_FAIL;
+		__try {
+			hr = __HrLoadAllImportsForDll("D3DCompiler_43.dll");
+		} __except(EXCEPTION_EXECUTE_HANDLER) {
+			hr = E_FAIL;
+		}
+
+		if (! SUCCEEDED(hr)) {
+			ods("D3D11: Unable to load D3DCompiler_43.dll");
+			return false;
+		}
+
+		ods("D3D11: Sucessfully loaded all imports of delay-loaded D3DCompiler_43.dll");
+	}
+#endif
+
+	return true;
+}
+
 /// Prepares DXGI and D3D11 data by trying to determine the module filepath
 /// and function offsets in memory.
 /// (This data can later be used for hooking / code injection.)
@@ -671,6 +719,9 @@ void hookD3D11(HMODULE hD3D11, bool preonly) {
 void PrepareDXGI11(IDXGIAdapter1* pAdapter, bool initializeDXGIData) {
 
 	if (!dxgi || !d3d11 || !pAdapter)
+		return;
+
+	if (!HasD3DCompilerDLL())
 		return;
 
 	ods("D3D11: Preparing static data for DXGI and D3D11 Injection");
