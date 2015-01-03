@@ -176,5 +176,4 @@ void HardHook::print() {
  */
 void HardHook::check() {
 		fods("HardHook: unused 'check' method called for MinHook-based HardHook");
-
 }
