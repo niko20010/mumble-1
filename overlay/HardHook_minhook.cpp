@@ -99,9 +99,7 @@ HardHook::HardHook(voidFunc func, voidFunc replacement) {
 /**
  * @brief Makes sure the given replacement function is run once func is called.
  *
- * Tries to construct a trampoline for the given function (@see HardHook::cloneCode)
- * and then injects replacement function calling code into the first 6 bytes of the
- * original function (@see HardHook::inject).
+ * Uses MinHook to put the hook in place.
  *
  * @param func Pointer to function to redirect.
  * @param replacement Pointer to code to redirect to.
@@ -134,12 +132,7 @@ void HardHook::reset() {
 /**
  * @brief Injects redirection code into the target function.
  *
- * Replaces the first 6 Bytes of the function indicated by baseptr
- * with the replacement code previously generated (usually a jump
- * to mumble code). If a trampoline is available this injection is not needed
- * as control flow was already permanently redirected by HardHook::setup .
- *
- * @param force Perform injection even when trampoline is available.
+ * @param force No-op in the MinHook-based HardHook implementation.
  */
 void HardHook::inject(bool force) {
 	if (!force) {
@@ -158,12 +151,7 @@ void HardHook::inject(bool force) {
 /**
  * @brief Restores the original code in a target function.
  *
- * Restores the first 6 Bytes of the function indicated by baseptr
- * from previously stored original code in orig. If a trampoline is available this
- * restoration is not needed as trampoline will correctly restore control
- * flow.
- *
- * @param force If true injection will be reverted even when trampoline is available.
+ * @param force No-op in the MinHook-based HardHook implementation.
  */
 void HardHook::restore(bool force) {
 	if (!force) {
@@ -184,10 +172,7 @@ void HardHook::print() {
 }
 
 /**
- * @brief Checks whether injected code is in good shape and injects if not yet injected.
- *
- * If injected code is not found injection is attempted unless 3rd party overwrote
- * original code at injection location.
+ * @brief No-op in MinHook-based HardHook implementation.
  */
 void HardHook::check() {
 		fods("HardHook: unused 'check' method called for MinHook-based HardHook");
