@@ -29,7 +29,9 @@ CONFIG *= ordered debug_and_release
   }
 
   win32 {
-    SUBDIRS *= 3rdparty/minhook-build
+    equals(QMAKE_TARGET.arch, x86_64) {
+      SUBDIRS *= 3rdparty/minhook-build
+    }
   }
 
   SUBDIRS *= src/mumble
