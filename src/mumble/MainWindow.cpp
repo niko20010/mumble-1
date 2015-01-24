@@ -67,6 +67,7 @@
 #include "VoiceRecorderDialog.h"
 #include "../SignalCurry.h"
 #include "Settings.h"
+#include "VolumeSliderAction.h"
 
 #ifdef Q_OS_WIN
 #include "TaskList.h"
@@ -1231,6 +1232,12 @@ void MainWindow::qmUser_aboutToShow() {
 		qmUser->addSeparator();
 		qmUser->addAction(qaAudioMute);
 		qmUser->addAction(qaAudioDeaf);
+	}
+
+	if (p && !self) {
+		qmUser->addSeparator();
+		VolumeSliderAction *volumeSliderAction = new VolumeSliderAction(p->uiSession, this);
+		qmUser->addAction(volumeSliderAction);
 	}
 
 #ifndef Q_OS_MAC
