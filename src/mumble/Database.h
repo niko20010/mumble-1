@@ -88,6 +88,9 @@ class Database : public QObject {
 
 		static bool getUdp(const QByteArray &digest);
 		static void setUdp(const QByteArray &digest, bool udp);
+
+		static void setUserVolume(const QString &hash, float volume);
+		static float getUserVolume(const QString &hash);
 };
 
 #endif
