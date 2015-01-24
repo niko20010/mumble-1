@@ -296,6 +296,9 @@ void MainWindow::msgUserState(const MumbleProto::UserState &msg) {
 			pDst->setLocalMute(true);
 		if (Database::isLocalIgnored(pDst->qsHash))
 			pDst->setLocalIgnore(true);
+
+		float volume = Database::getUserVolume(pDst->qsHash);
+		pDst->fVolume = volume;
 	}
 
 	if (bNewUser)
