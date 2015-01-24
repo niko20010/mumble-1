@@ -173,6 +173,8 @@ Database::Database() {
 	execQueryAndLogFailure(query, QLatin1String("CREATE TABLE IF NOT EXISTS `pingcache` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `hostname` TEXT, `port` INTEGER, `ping` INTEGER)"));
 	execQueryAndLogFailure(query, QLatin1String("CREATE UNIQUE INDEX IF NOT EXISTS `pingcache_host_port` ON `pingcache`(`hostname`,`port`)"));
 
+	execQueryAndLogFailure(query, QLatin1String("CREATE TABLE IF NOT EXISTS `volume` (`hash` TEXT PRIMARY KEY, `volume` INT)"));
+
 	execQueryAndLogFailure(query, QLatin1String("DELETE FROM `comments` WHERE `seen` < datetime('now', '-1 years')"));
 	execQueryAndLogFailure(query, QLatin1String("DELETE FROM `blobs` WHERE `seen` < datetime('now', '-1 months')"));
 
@@ -593,6 +595,26 @@ void Database::setUdp(const QByteArray &digest, bool udp) {
 		query.prepare(QLatin1String("DELETE FROM `udp` WHERE `digest` = ?"));
 	query.addBindValue(digest);
 	execQueryAndLogFailure(query);
+}
+
+void Database::setUserVolume(const QString &hash, float volume) {
+	QSqlQuery query;
+
+	query.prepare(QLatin1String("REPLACE INTO `volume` (`hash`, `volume`) VALUES (?,?)"));
+	query.addBindValue(hash);
+	query.addBindValue(volume);
+	execQueryAndLogFailure(query);
+}
+
+float Database::getUserVolume(const QString &hash) {
+	QSqlQuery query;
+	query.prepare(QLatin1String("SELECT volume FROM `volume` WHERE `hash` = ? "));
+	query.addBindValue(hash);
+	execQueryAndLogFailure(query);
+	if (query.next()) {
+		return query.value(0).toFloat();
+	}
+	return 1.0f;
 }
 
 bool Database::fuzzyMatch(QString &name, QString &user, QString &pw, QString &hostname, unsigned short port) {
