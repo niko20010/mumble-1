@@ -50,6 +50,7 @@ ClientUser::ClientUser(QObject *p) : QObject(p),
 		fPowerMin(0.0f),
 		fPowerMax(0.0f),
 		fAverageAvailable(0.0f),
+		fVolume(1.0f),
 		iFrames(0),
 		iSequence(0) {
 }
