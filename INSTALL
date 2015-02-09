@@ -154,3 +154,5 @@ CONFIG+=no-overlay (Mumble, Linux)
 CONFIG+=no-xinput2 (Mumble, Linux)
  Don't build support for XI2.
 
+CONFIG+=no-jack (Mumble)
+ Don't build support for Jack.
