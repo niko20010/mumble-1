@@ -329,6 +329,8 @@ Settings::Settings() {
 	qsALSAInput=QLatin1String("default");
 	qsALSAOutput=QLatin1String("default");
 
+	qsJackClientName = QLatin1String("mumble");
+
 	bEcho = false;
 	bEchoMulti = true;
 
@@ -618,6 +620,8 @@ void Settings::load(QSettings* settings_ptr) {
 
 	SAVELOAD(qbaDXInput, "directsound/input");
 	SAVELOAD(qbaDXOutput, "directsound/output");
+
+	SAVELOAD(qsJackClientName, "jack/clientname");
 
 	SAVELOAD(bTTS, "tts/enable");
 	SAVELOAD(iTTSVolume, "tts/volume");
@@ -913,6 +917,8 @@ void Settings::save() {
 
 	SAVELOAD(qbaDXInput, "directsound/input");
 	SAVELOAD(qbaDXOutput, "directsound/output");
+
+	SAVELOAD(qsJackClientName, "jack/clientname");
 
 	SAVELOAD(bTTS, "tts/enable");
 	SAVELOAD(iTTSVolume, "tts/volume");

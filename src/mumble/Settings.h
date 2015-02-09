@@ -220,6 +220,8 @@ struct Settings {
 	QString qsWASAPIInput, qsWASAPIOutput;
 	QByteArray qbaDXInput, qbaDXOutput;
 
+	QString qsJackClientName;
+
 	bool bExclusiveInput, bExclusiveOutput;
 	bool bEcho;
 	bool bEchoMulti;
