@@ -229,6 +229,8 @@ struct Settings {
 
 	int iOverlayWinHelperRestartCooldownMsec;
 	int iOverlayWinHelperRestartDelayMsec;
+	bool bOverlayWinHelperX86Enable;
+	bool bOverlayWinEnableX64Helper;
 
 	int iLCDUserViewMinColWidth;
 	int iLCDUserViewSplitterWidth;
