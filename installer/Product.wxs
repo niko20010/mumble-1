@@ -15,6 +15,9 @@
       <ProgressText Action="NSISUninstall">Uninstalling old version</ProgressText>
     </UI>
 
+    <Property Id="QtExecCmdLine" Value='"$(env.SystemRoot)\System32\taskkill.exe" /f /im mumble.exe' />
+    <CustomAction Id="CloseApplication" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="immediate" Return="ignore" />
+
     <Property Id="WixShellExecTarget" Value="[#mumble.exe]" />
     <CustomAction Id="LaunchApplication" BinaryKey="WixCA" DllEntry="WixShellExec" Impersonate="yes" />
     <UI>
@@ -41,6 +44,7 @@
     <Property Id="ARPURLINFOABOUT" Value="http://www.mumble.info/" />
     <Property Id="ARPURLUPDATEINFO" Value="http://www.mumble.info/" />
     <Property Id='ARPPRODUCTICON'>mumble.ico</Property>
+    <Property Id="MSIRESTARTMANAGERCONTROL" Value="Disable" />
 
     <WixVariable Id="WixUILicenseRtf" Value="$(var.SourceDir)\installer\gpl.rtf" />
     <WixVariable Id="WixUIBannerBmp" Value="$(var.SourceDir)\installer\bannrbmp.bmp" />
@@ -220,6 +224,7 @@
       <AppSearch Sequence='1' />
       <Custom Action="SetNSISPath" After="AppSearch">NSISINSTALL</Custom>
       <Custom Action='NSISUninstall' After='InstallInitialize'>NSISINSTALL AND NOT Installed</Custom>
+      <Custom Action="CloseApplication" Before="InstallValidate">WIX_UPGRADE_DETECTED</Custom>
     </InstallExecuteSequence>
   </Product>
 </Wix>
