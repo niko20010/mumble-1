@@ -150,7 +150,7 @@ int main(int argc, char **argv) {
 		_wputenv_s(L"MUMBLE_VERSION_ROOT", L"");
 	}
 
-	std::wstring abs_dll_path = GetAbsoluteMumbleAppDllPath(versioned_root_path);
+	std::wstring abs_dll_path = GetAbsoluteMumbleAppDllPath(ok ? versioned_root_path : std::wstring());
 	if (abs_dll_path.empty()) {
 		Alert(L"Mumble Launcher Error -2", L"Unable to find the absolute path of mumble_app.dll.");
 		return -2;
