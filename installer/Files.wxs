@@ -2,6 +2,79 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <?include "Settings.wxi" ?>
 
+  <!-- Mumble Version Specific -->
+  <Fragment>
+      <?ifdef VersionSubDir ?>
+        <DirectoryRef Id="VersionFolder">
+      <?else VersionSubDir ?>
+        <DirectoryRef Id="INSTALLDIR">
+      <?endif ?>
+
+      <?ifdef StaticBuild ?>
+        <Component Id="mumble_app.dll">
+          <File Source="$(var.SourceDir)\release\mumble_app.dll" KeyPath="yes" />
+        </Component>
+      <?endif ?>
+      <Component Id="mumble_ol.dll">
+        <File Source="$(var.SourceDir)\release\mumble_ol.dll" KeyPath="yes" />
+      </Component>
+      <Component Id="mumble_ol_helper.exe">
+         <File Source="$(var.SourceDir)\release\mumble_ol_helper.exe" KeyPath="yes" />
+      </Component>
+      <Component Id="mumble_ol_x64.dll">
+        <File Source="$(var.SourceDir)\release\mumble_ol_x64.dll" KeyPath="yes" />
+      </Component>
+      <Component Id="mumble_ol_helper_x64.exe">
+         <File Source="$(var.SourceDir)\release\mumble_ol_helper_x64.exe" KeyPath="yes" />
+      </Component>
+
+      <Component Id="celt0.0.7.0.dll">
+        <File Source="$(var.SourceDir)\release\celt0.0.7.0.dll" KeyPath="yes" />
+      </Component>
+      <Component Id="celt0.0.11.0.dll">
+        <File Source="$(var.SourceDir)\release\celt0.0.11.0.dll" KeyPath="yes" />
+      </Component>
+      <Component Id="speex.dll">
+        <File Source="$(var.SourceDir)\release\speex.dll" KeyPath="yes" />
+      </Component>
+      <Component Id="opus.dll">
+        <File Source="$(var.SourceDir)\release\opus.dll" KeyPath="yes" />
+      </Component>
+
+      <?ifdef SSE ?>
+        <Component Id="celt0.0.7.0.sse.dll">
+          <File Source="$(var.SourceDir)\release\celt0.0.7.0.sse.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="celt0.0.11.0.sse.dll">
+          <File Source="$(var.SourceDir)\release\celt0.0.11.0.sse.dll" KeyPath="yes" />
+        </Component>
+      <?endif ?>
+
+      <?ifdef SSE2 ?>
+        <Component Id="celt0.0.7.0.sse2.dll">
+          <File Source="$(var.SourceDir)\release\celt0.0.7.0.sse2.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="celt0.0.11.0.sse2.dll">
+          <File Source="$(var.SourceDir)\release\celt0.0.11.0.sse2.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="opus.sse2.dll">
+          <File Source="$(var.SourceDir)\release\opus.sse2.dll" KeyPath="yes" />
+        </Component>
+      <?endif ?>
+
+      <?ifdef G15 ?>
+        <Component Id="mumble_g15_helper.exe">
+          <File Source="$(var.SourceDir)\release\mumble-g15-helper.exe" KeyPath="yes" />
+        </Component>
+      <?endif ?>
+
+    <?ifdef VersionSubDir ?>
+      </DirectoryRef>
+    <?else ?>
+      </DirectoryRef>
+    <?endif ?>
+  </Fragment>
+
   <!-- Mumble -->
   <Fragment>
     <DirectoryRef Id="INSTALLDIR">
@@ -27,74 +100,6 @@
         <RegistryValue Root="HKCR" Key="mumble\DefaultIcon" Value="[#mumble.exe]" Type="string" />
         <RegistryValue Root="HKCR" Key="mumble\shell\open\command" Value="[#mumble.exe] &quot;%1&quot;" Type="string" />
       </Component>
-
-      <?ifdef VersionSubDir ?>
-        <DirectoryRef Id="VERSIONCONTAINERDIR" Name="Versions">
-          <DirectoryRef Id="VERSIONDIR" Name="$(var.VersionSubDir)">
-      <?endif ?>
-
-            <?ifdef StaticBuild ?>
-              <Component Id="mumble_app.dll">
-                <File Source="$(var.SourceDir)\release\mumble_app.dll" KeyPath="yes" />
-              </Component>
-            <?endif ?>
-            <Component Id="mumble_ol.dll">
-              <File Source="$(var.SourceDir)\release\mumble_ol.dll" KeyPath="yes" />
-            </Component>
-            <Component Id="mumble_ol_helper.exe">
-               <File Source="$(var.SourceDir)\release\mumble_ol_helper.exe" KeyPath="yes" />
-            </Component>
-            <Component Id="mumble_ol_x64.dll">
-              <File Source="$(var.SourceDir)\release\mumble_ol_x64.dll" KeyPath="yes" />
-            </Component>
-            <Component Id="mumble_ol_helper_x64.exe">
-               <File Source="$(var.SourceDir)\release\mumble_ol_helper_x64.exe" KeyPath="yes" />
-            </Component>
-
-            <Component Id="celt0.0.7.0.dll">
-              <File Source="$(var.SourceDir)\release\celt0.0.7.0.dll" KeyPath="yes" />
-            </Component>
-            <Component Id="celt0.0.11.0.dll">
-              <File Source="$(var.SourceDir)\release\celt0.0.11.0.dll" KeyPath="yes" />
-            </Component>
-            <Component Id="speex.dll">
-              <File Source="$(var.SourceDir)\release\speex.dll" KeyPath="yes" />
-            </Component>
-            <Component Id="opus.dll">
-              <File Source="$(var.SourceDir)\release\opus.dll" KeyPath="yes" />
-            </Component>
-
-            <?ifdef SSE ?>
-              <Component Id="celt0.0.7.0.sse.dll">
-                <File Source="$(var.SourceDir)\release\celt0.0.7.0.sse.dll" KeyPath="yes" />
-              </Component>
-              <Component Id="celt0.0.11.0.sse.dll">
-                <File Source="$(var.SourceDir)\release\celt0.0.11.0.sse.dll" KeyPath="yes" />
-              </Component>
-            <?endif ?>
-
-            <?ifdef SSE2 ?>
-              <Component Id="celt0.0.7.0.sse2.dll">
-                <File Source="$(var.SourceDir)\release\celt0.0.7.0.sse2.dll" KeyPath="yes" />
-              </Component>
-              <Component Id="celt0.0.11.0.sse2.dll">
-                <File Source="$(var.SourceDir)\release\celt0.0.11.0.sse2.dll" KeyPath="yes" />
-              </Component>
-              <Component Id="opus.sse2.dll">
-                <File Source="$(var.SourceDir)\release\opus.sse2.dll" KeyPath="yes" />
-              </Component>
-            <?endif ?>
-
-            <?ifdef G15 ?>
-              <Component Id="mumble_g15_helper.exe">
-                <File Source="$(var.SourceDir)\release\mumble-g15-helper.exe" KeyPath="yes" />
-              </Component>
-            <?endif ?>
-
-      <?ifdef VersionSubDir ?>
-          </DirectoryRef>
-        <DirectoryRef>
-      <?endif ?>
 
       <Component Id="MurmurDesktopShortcutComponent" Guid="$(var.MurmurDesktopShortcutGuid)" KeyPath="yes">
         <Shortcut Id="MurmurDesktopShortcut"
@@ -375,7 +380,15 @@
   <!-- Directory tree -->
     <Fragment>
       <DirectoryRef Id="INSTALLDIR">
-        <Directory Id="PluginFolder" Name="plugins" />
+        <?ifdef VersionSubDir ?>
+          <Directory Id="VersionContainerFolder" Name="Versions">
+            <Directory Id="VersionFolder" Name="$(var.VersionSubDir)">
+              <Directory Id="PluginFolder" Name="plugins" />
+            </Directory>
+          </Directory>
+        <?else ?>
+          <Directory Id="PluginFolder" Name="plugins" />
+        <?endif ?>
         <?ifndef StaticBuild ?>
           <Directory Id="QtPluginFolder" Name="QtPlugins">
             <Directory Id="QtPluginIconEnginesFolder" Name="iconengines" />
