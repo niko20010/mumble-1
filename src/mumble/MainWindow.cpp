@@ -68,6 +68,7 @@
 #include "../SignalCurry.h"
 #include "Settings.h"
 #include "Themes.h"
+#include "SSLCipherInfo.h"
 
 #ifdef Q_OS_WIN
 #include "TaskList.h"
@@ -1166,19 +1167,55 @@ void MainWindow::on_qaServerInformation_triggered() {
 
 	g.sh->getConnectionInfo(host,port,uname,pw);
 
+	QString qsCipherInfo;
+	const SSLCipherInfo *ci = SSLCipherInfoLookupByOpenSSLName(qsc.name().toLatin1().constData());
+	if (ci && ci->message_authentication && ci->encryption && ci->key_exchange_verbose) {
+		if (QString::fromLatin1(ci->message_authentication) == QLatin1String("AEAD")) {
+			qsCipherInfo=tr(
+			    "<p>The connection is encrypted and authenticated "
+			    "using %1 and uses %2 as the key exchange mechanism.</p>").arg(
+			        QString::fromLatin1(ci->encryption),
+			        QString::fromLatin1(ci->key_exchange_verbose));
+		} else {
+			qsCipherInfo=tr(
+			    "<p>The connection is encrypted using %1, with %2 "
+			    "for message authentication and %3 as the key "
+			    "exchange mechanism.</p>").arg(
+			        QString::fromLatin1(ci->encryption),
+			        QString::fromLatin1(ci->message_authentication),
+			        QString::fromLatin1(ci->key_exchange_verbose));
+		}
+	}
+	if (qsCipherInfo.isEmpty()) {
+		QString qsCipherInfo=tr("<p>The connection is secured using the %1 TLS cipher suite.</p>").arg(qsc.name());
+	}
+
+	QString qsFullCipherName;
+	if (ci && ci->rfc_name) {
+		qsFullCipherName=tr("<p>The full name of the connection's TLS cipher suite is %1.").arg(QString::fromLatin1(ci->rfc_name));
+	}
+
+	QString qsPFSInfo;
+	if (ci) {
+		if (ci->forward_secret) {
+			qsPFSInfo=tr("<p>The connection is forward secret.</p>");
+		} else {
+			qsPFSInfo=tr("<p>The connection is not forward secret.</p>");
+		}
+	}
+
 	QString qsControl=tr(
 	            "<h2>Control channel</h2>"
 	            "<p>The connection uses %1.</p>"
-	            "<p>The connection is encrypted using "
-	            "%2, with %3 for "
-	            "message authentication and "
-	            "%4 as the key exchange mechanism.</p>"
+	            "%2"
+	            "%3"
+	            "%4"
 	            "<p>%5 ms average latency (%6 deviation)</p>"
 	            "<p>Remote host %7 (port %8)</p>").arg(
 	                  Qt::escape(c->sessionProtocolString()),
-	                  Qt::escape(qsc.name()),
-	                  Qt::escape(qsc.authenticationMethod()),
-	                  Qt::escape(qsc.keyExchangeMethod()),
+	                  qsCipherInfo,
+	                  qsFullCipherName,
+	                  qsPFSInfo,
 	                  QString::fromLatin1("%1").arg(boost::accumulators::mean(g.sh->accTCP), 0, 'f', 2),
 	                  QString::fromLatin1("%1").arg(sqrt(boost::accumulators::variance(g.sh->accTCP)),0,'f',2),
 	                  Qt::escape(host),
