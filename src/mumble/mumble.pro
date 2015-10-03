@@ -1,5 +1,10 @@
 include(../mumble.pri)
 
+# Override rcc with our own script to avoid "rcc -list" complaining
+# about missing files that are generated later on.
+qtPrepareTool(QMAKE_RCC, rcc, _DEP)
+QT_TOOL.rcc.binary = python ..\\..\\scripts\\rcc.py $$QMAKE_RCC
+
 DEFINES		*= MUMBLE
 TEMPLATE	= app
 TARGET		= mumble
