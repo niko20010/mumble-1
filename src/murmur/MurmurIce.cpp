@@ -604,7 +604,8 @@ void MurmurIce::idToNameSlot(QString &name, int id) {
 	const ServerAuthenticatorPrx prx = getServerAuthenticator(server);
 	try {
 		name = u8(prx->idToName(id));
-	} catch (...) {
+	} catch (std::exception &e) {
+		qWarning("%s", e.what());
 		badAuthenticator(server);
 	}
 }
@@ -619,7 +620,8 @@ void MurmurIce::idToTextureSlot(QByteArray &qba, int id) {
 		char *ptr = qba.data();
 		for (unsigned int i=0;i<tex.size();++i)
 			ptr[i] = tex[i];
-	} catch (...) {
+	} catch (std::exception &e) {
+		qWarning("%s", e.what());
 		badAuthenticator(server);
 	}
 }
@@ -630,7 +632,8 @@ void MurmurIce::nameToIdSlot(int &id, const QString &name) {
 	const ServerAuthenticatorPrx prx = getServerAuthenticator(server);
 	try {
 		id = prx->nameToId(u8(name));
-	} catch (...) {
+	} catch (std::exception &e) {
+		qWarning("%s", e.what());
 		badAuthenticator(server);
 	}
 }
@@ -656,8 +659,8 @@ void MurmurIce::authenticateSlot(int &res, QString &uname, int sessionId, const 
 
 	try {
 		res = prx->authenticate(u8(uname), u8(pw), certs, u8(certhash), certstrong, newname, groups);
-	} catch (...) {
-		badAuthenticator(server);
+	} catch (std::exception &e) {
+		qWarning("%s", e.what());
 	}
 	if (res >= 0) {
 		if (newname.length() > 0)
@@ -683,8 +686,8 @@ void MurmurIce::registerUserSlot(int &res, const QMap<int, QString> &info) {
 	infoToInfo(info, im);
 	try {
 		res = prx->registerUser(im);
-	} catch (...) {
-		badAuthenticator(server);
+	} catch (std::exception &e) {
+		qWarning("%s", e.what());
 	}
 }
 
@@ -696,8 +699,8 @@ void MurmurIce::unregisterUserSlot(int &res, int id) {
 		return;
 	try {
 		res = prx->unregisterUser(id);
-	} catch (...) {
-		badAuthenticator(server);
+	} catch (std::exception &e) {
+		qWarning("%s", e.what());
 	}
 }
 
@@ -714,8 +717,8 @@ void MurmurIce::getRegistrationSlot(int &res, int id, QMap<int, QString> &info) 
 			res = 1;
 			infoToInfo(im, info);
 		}
-	} catch (...) {
-		badAuthenticator(server);
+	} catch (std::exception &e) {
+		qWarning("%s", e.what());
 		return;
 	}
 }
@@ -731,8 +734,8 @@ void  MurmurIce::getRegisteredUsersSlot(const QString &filter, QMap<int, QString
 
 	try {
 		lst = prx->getRegisteredUsers(u8(filter));
-	} catch (...) {
-		badAuthenticator(server);
+	} catch (std::exception &e) {
+		qWarning("%s", e.what());
 		return;
 	}
 	::Murmur::NameMap::const_iterator i;
@@ -752,8 +755,8 @@ void MurmurIce::setInfoSlot(int &res, int id, const QMap<int, QString> &info) {
 
 	try {
 		res = prx->setInfo(id, im);
-	} catch (...) {
-		badAuthenticator(server);
+	} catch (std::exception &e) {
+		qWarning("%s", e.what());
 	}
 }
 
@@ -772,8 +775,8 @@ void MurmurIce::setTextureSlot(int &res, int id, const QByteArray &texture) {
 
 	try {
 		res = prx->setTexture(id, tex);
-	} catch (...) {
-		badAuthenticator(server);
+	} catch (std::exception &e) {
+		qWarning("%s", e.what());
 	}
 }
 
